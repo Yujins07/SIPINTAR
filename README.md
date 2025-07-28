@@ -1,17 +1,18 @@
-# SIPINTAR - Sistem Informasi Pintar Sekolah
+# SIPINTAR - Sistem Pemantauan Interaktif dan Pintar
 
 Aplikasi manajemen sekolah modern yang dibangun dengan Next.js, TypeScript, Prisma ORM, dan MySQL.
 
 ## ✨ Fitur Utama
 
-- 👨‍💼 **Dashboard Admin**: Kelola seluruh sistem sekolah
-- 👨‍🎓 **Manajemen Siswa**: CRUD siswa, enrollment kelas, data orang tua
-- 👨‍🏫 **Manajemen Guru**: CRUD guru, assignment mata pelajaran, kualifikasi
-- 🏫 **Manajemen Kelas**: Pembagian kelas, wali kelas, mata pelajaran
-- ⏰ **Sistem Absensi**: Input dan monitoring kehadiran realtime
-- 📊 **Sistem Penilaian**: Input nilai, laporan akademik, tracking progress
+- 👨‍💼 **Dashboard Pemantauan Pintar**: Kelola seluruh sistem sekolah dengan analytics
+- 👨‍🎓 **Pemantauan Siswa**: CRUD siswa, enrollment kelas, tracking progress real-time
+- 👨‍🏫 **Pemantauan Guru**: CRUD guru, assignment mata pelajaran, evaluasi kinerja
+- 🏫 **Pemantauan Kelas**: Monitoring aktivitas kelas, wali kelas, mata pelajaran
+- ⏰ **Sistem Absensi Interaktif**: Input dan monitoring kehadiran dengan alert otomatis
+- 📊 **Sistem Penilaian Pintar**: Input nilai, analitik akademik, insights progress
 - 🔐 **Authentication**: Login role-based (Admin, Guru, Siswa)
 - 📱 **Responsive Design**: Mobile-first approach
+- 📈 **Analytics Dashboard**: Chart dan visualisasi data dengan Recharts
 
 ## 🛠️ Tech Stack
 
@@ -20,6 +21,7 @@ Aplikasi manajemen sekolah modern yang dibangun dengan Next.js, TypeScript, Pris
 - **Database**: MySQL dengan Prisma ORM
 - **Authentication**: JWT dengan bcryptjs
 - **UI Components**: Radix UI, Lucide React
+- **Charts**: Recharts untuk visualisasi data
 - **Styling**: Tailwind CSS
 
 ## 🚀 Quick Start

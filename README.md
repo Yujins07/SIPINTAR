@@ -1,24 +1,164 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SIPINTAR - Sistem Informasi Pintar Sekolah
 
-## Getting Started
+Aplikasi manajemen sekolah modern yang dibangun dengan Next.js, TypeScript, Prisma ORM, dan MySQL.
 
-First, run the development server:
+## ✨ Fitur Utama
+
+- 👨‍💼 **Dashboard Admin**: Kelola seluruh sistem sekolah
+- 👨‍🎓 **Manajemen Siswa**: CRUD siswa, enrollment kelas, data orang tua
+- 👨‍🏫 **Manajemen Guru**: CRUD guru, assignment mata pelajaran, kualifikasi
+- 🏫 **Manajemen Kelas**: Pembagian kelas, wali kelas, mata pelajaran
+- ⏰ **Sistem Absensi**: Input dan monitoring kehadiran realtime
+- 📊 **Sistem Penilaian**: Input nilai, laporan akademik, tracking progress
+- 🔐 **Authentication**: Login role-based (Admin, Guru, Siswa)
+- 📱 **Responsive Design**: Mobile-first approach
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 15, React, TypeScript, Tailwind CSS
+- **Backend**: Next.js API Routes
+- **Database**: MySQL dengan Prisma ORM
+- **Authentication**: JWT dengan bcryptjs
+- **UI Components**: Radix UI, Lucide React
+- **Styling**: Tailwind CSS
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+ 
+- MySQL Database
+- npm/yarn/pnpm
+
+### Installation
+
+1. **Clone repository** (jika dari git)
+   ```bash
+   git clone <repository-url>
+   cd sipintar-app
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Setup Database**
+   - Buat database MySQL baru
+   - Copy `.env.example` ke `.env`
+   - Update connection string database di `.env`:
+   ```env
+   DATABASE_URL="mysql://username:password@localhost:3306/sipintar_school"
+   NEXTAUTH_SECRET="your-secret-key-here"
+   NEXTAUTH_URL="http://localhost:3000"
+   ```
+
+4. **Setup Database Schema**
+   ```bash
+   npx prisma db push
+   npx prisma generate
+   ```
+
+5. **Seed Database dengan Data Demo**
+   ```bash
+   npm run db:seed
+   ```
+
+6. **Jalankan Development Server**
+   ```bash
+   npm run dev
+   ```
+
+7. **Akses Aplikasi**
+   Buka [http://localhost:3000](http://localhost:3000)
+
+## 👥 Demo Accounts
+
+Setelah menjalankan seeding, gunakan akun demo berikut:
+
+- **Admin**: `admin@sipintar.com` / `admin123`
+- **Guru**: `guru@sipintar.com` / `guru123`  
+- **Siswa**: `siswa@sipintar.com` / `siswa123`
+
+## 📁 Struktur Database
+
+### Users & Roles
+- **User**: Base table untuk semua pengguna
+- **Student**: Profile siswa dengan data orang tua
+- **Teacher**: Profile guru dengan spesialisasi
+
+### Academic Management
+- **Subject**: Mata pelajaran yang diajarkan
+- **Class**: Kelas dengan wali kelas dan mata pelajaran
+- **ClassStudent**: Relasi many-to-many siswa dan kelas
+- **AcademicYear**: Tahun akademik
+
+### Operations
+- **Attendance**: Sistem absensi harian
+- **Grade**: Sistem penilaian dengan berbagai jenis nilai
+
+## 🔧 Available Scripts
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev          # Jalankan development server
+npm run build        # Build untuk production
+npm run start        # Jalankan production server
+npm run lint         # Jalankan ESLint
+npm run db:generate  # Generate Prisma client
+npm run db:push      # Push schema ke database
+npm run db:seed      # Seed database dengan data demo
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📐 Project Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+src/
+├── app/                 # Next.js App Router
+│   ├── api/            # API routes
+│   ├── auth/           # Authentication pages
+│   ├── dashboard/      # Dashboard pages
+│   └── page.tsx        # Homepage
+├── lib/                # Utility functions
+│   ├── prisma.ts       # Database connection
+│   ├── auth.ts         # Authentication helpers
+│   └── utils.ts        # General utilities
+└── components/         # React components
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+prisma/
+├── schema.prisma       # Database schema
+└── seed.ts            # Database seeding script
+```
+
+## 🎯 Roadmap
+
+- [ ] NextAuth.js integration
+- [ ] Email notifications
+- [ ] File upload untuk foto profil
+- [ ] Advanced reporting & analytics
+- [ ] Mobile app dengan React Native
+- [ ] Integration dengan sistem pembayaran
+- [ ] Multi-tenant support
+
+## 🤝 Contributing
+
+1. Fork repository
+2. Buat feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🆘 Support
+
+Untuk bantuan dan dukungan:
+- Create issue di GitHub
+- Email: support@sipintar.com
+
+---
+Dibuat dengan ❤️ menggunakan Next.js
 
 ## Learn More
 

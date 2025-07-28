@@ -1,0 +1,224 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Model untuk User (Admin, Guru, Siswa)
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  password      String
+  role          Role      @default(STUDENT)
+  profileImage  String?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  student       Student?
+  teacher       Teacher?
+  classEnrollments ClassStudent[]
+  attendances   Attendance[]
+  grades        Grade[]
+
+  @@map("users")
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+// Model untuk Siswa
+model Student {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  studentNumber   String   @unique
+  dateOfBirth     DateTime
+  address         String
+  phone           String?
+  parentName      String
+  parentPhone     String
+  emergencyContact String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  classEnrollments ClassStudent[]
+  attendances     Attendance[]
+  grades          Grade[]
+
+  @@map("students")
+}
+
+// Model untuk Guru
+model Teacher {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  teacherNumber   String   @unique
+  specialization  String
+  qualification   String
+  experience      Int      // dalam tahun
+  phone           String?
+  address         String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subjects        Subject[]
+  classes         Class[]
+  attendances     Attendance[]
+  grades          Grade[]
+
+  @@map("teachers")
+}
+
+// Model untuk Mata Pelajaran
+model Subject {
+  id          String   @id @default(cuid())
+  name        String
+  code        String   @unique
+  description String?
+  credits     Int      @default(1)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  teacherId   String
+  teacher     Teacher  @relation(fields: [teacherId], references: [id])
+  classes     Class[]
+  grades      Grade[]
+
+  @@map("subjects")
+}
+
+// Model untuk Kelas
+model Class {
+  id          String   @id @default(cuid())
+  name        String   // e.g., "X-IPA-1", "XI-IPS-2"
+  grade       String   // e.g., "X", "XI", "XII"
+  section     String   // e.g., "IPA", "IPS"
+  maxStudents Int      @default(30)
+  room        String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  teacherId   String   // Wali kelas
+  teacher     Teacher  @relation(fields: [teacherId], references: [id])
+  subjectId   String
+  subject     Subject  @relation(fields: [subjectId], references: [id])
+  students    ClassStudent[]
+  attendances Attendance[]
+  grades      Grade[]
+
+  @@map("classes")
+}
+
+// Model untuk hubungan Siswa dan Kelas (Many-to-Many)
+model ClassStudent {
+  id        String   @id @default(cuid())
+  studentId String
+  classId   String
+  userId    String
+  enrolledAt DateTime @default(now())
+  isActive  Boolean  @default(true)
+
+  // Relations
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, classId])
+  @@map("class_students")
+}
+
+// Model untuk Absensi
+model Attendance {
+  id        String         @id @default(cuid())
+  date      DateTime
+  status    AttendanceStatus
+  notes     String?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  // Relations
+  studentId String
+  student   Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacherId String
+  teacher   Teacher        @relation(fields: [teacherId], references: [id])
+  classId   String
+  class     Class          @relation(fields: [classId], references: [id])
+  userId    String
+  user      User           @relation(fields: [userId], references: [id])
+
+  @@unique([studentId, classId, date])
+  @@map("attendances")
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+// Model untuk Nilai
+model Grade {
+  id          String     @id @default(cuid())
+  type        GradeType
+  score       Float
+  maxScore    Float      @default(100)
+  description String?
+  date        DateTime
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  studentId   String
+  student     Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacherId   String
+  teacher     Teacher    @relation(fields: [teacherId], references: [id])
+  subjectId   String
+  subject     Subject    @relation(fields: [subjectId], references: [id])
+  classId     String
+  class       Class      @relation(fields: [classId], references: [id])
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+
+  @@map("grades")
+}
+
+enum GradeType {
+  QUIZ
+  ASSIGNMENT
+  MIDTERM
+  FINAL
+  PROJECT
+}
+
+// Model untuk Tahun Akademik
+model AcademicYear {
+  id        String   @id @default(cuid())
+  name      String   @unique // e.g., "2024/2025"
+  startDate DateTime
+  endDate   DateTime
+  isActive  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("academic_years")
+}

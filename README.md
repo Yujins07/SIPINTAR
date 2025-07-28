@@ -37,7 +37,7 @@ Aplikasi manajemen sekolah modern yang dibangun dengan Next.js, TypeScript, Pris
 1. **Clone repository** (jika dari git)
    ```bash
    git clone <repository-url>
-   cd sipintar-app
+   cd SIPINTAR
    ```
 
 2. **Install dependencies**

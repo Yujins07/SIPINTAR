@@ -27,9 +27,18 @@ export default function LoginPage() {
 
             if (response.ok) {
                 const data = await response.json()
-                // Store token or handle authentication
+                // Store token and user data
                 localStorage.setItem('token', data.token)
-                router.push('/dashboard')
+                localStorage.setItem('user', JSON.stringify(data.user))
+
+                // Redirect based on user role
+                if (data.user.role === 'ADMIN' || data.user.role === 'TEACHER') {
+                    router.push('/dashboard/admin')
+                } else if (data.user.role === 'PARENT') {
+                    router.push('/dashboard/parent')
+                } else {
+                    router.push('/dashboard') // fallback
+                }
             } else {
                 const data = await response.json()
                 setError(data.message || 'Login failed')
@@ -71,7 +80,7 @@ export default function LoginPage() {
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="Masukkan email Anda"
                                 />
                             </div>
@@ -87,7 +96,7 @@ export default function LoginPage() {
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="Masukkan password Anda"
                                 />
                             </div>
@@ -137,9 +146,8 @@ export default function LoginPage() {
                     <div className="mt-8 p-4 bg-gray-50 rounded-md">
                         <h4 className="text-sm font-medium text-gray-900 mb-2">Demo Accounts:</h4>
                         <div className="text-xs text-gray-600 space-y-1">
-                            <p><strong>Admin:</strong> admin@sipintar.com / admin123</p>
-                            <p><strong>Guru:</strong> guru@sipintar.com / guru123</p>
-                            <p><strong>Siswa:</strong> siswa@sipintar.com / siswa123</p>
+                            <p><strong>Admin (Guru):</strong> admin@sipintar.com / admin123</p>
+                            <p><strong>Orang Tua:</strong> parent@sipintar.com / parent123</p>
                         </div>
                     </div>
                 </div>

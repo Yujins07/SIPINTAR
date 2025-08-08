@@ -17,6 +17,17 @@ async function main() {
         },
     })
 
+    // Create Parent User
+    const parentPassword = await hashPassword('parent123')
+    await prisma.user.create({
+        data: {
+            email: 'parent@sipintar.com',
+            name: 'Budi Hartono',
+            password: parentPassword,
+            role: 'PARENT',
+        },
+    })
+
     // Create Teacher Users and Teacher profiles
     const teacherPassword = await hashPassword('guru123')
 

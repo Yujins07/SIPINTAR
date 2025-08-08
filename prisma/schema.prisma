@@ -36,6 +36,13 @@ enum Role {
   ADMIN
   TEACHER
   STUDENT
+  PARENT
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
 }
 
 // Model untuk Siswa
@@ -44,6 +51,7 @@ model Student {
   userId          String   @unique
   studentNumber   String   @unique
   dateOfBirth     DateTime
+  gender          Gender   @default(OTHER)
   address         String
   phone           String?
   parentName      String

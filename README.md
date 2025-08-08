@@ -1,4 +1,6 @@
 # SIPINTAR - Sistem Pemantauan Interaktif dan Pintar
+<img width="1342" height="632" alt="Screenshot 2025-08-08 215857" src="https://github.com/user-attachments/assets/22c2c735-c1b8-41be-ab57-3ab2ecc8dfe4" />
+<img width="1346" height="630" alt="Screenshot 2025-08-08 213859" src="https://github.com/user-attachments/assets/fa544aea-8a47-43f3-96a7-e3996bedd95c" />
 
 Aplikasi manajemen sekolah modern yang dibangun dengan Next.js, TypeScript, Prisma ORM, dan MySQL.
 

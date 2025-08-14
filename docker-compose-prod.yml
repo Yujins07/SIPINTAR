@@ -1,0 +1,71 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: sipintar-app
+    restart: unless-stopped
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: mysql://sipintar_user:sipintar_password123@db:3306/sipintar_school
+    depends_on:
+      db:
+        condition: service_healthy
+    # volumes:
+    #   - .:/app
+    #   - /app/node_modules
+    #   - /app/.next
+    networks:
+      - sipintar-network
+    command: ["npm", "run", "start"]
+
+
+  db:
+    image: mysql:5.7
+    container_name: sipintar-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root123}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-sipintar_school}
+      MYSQL_USER: ${MYSQL_USER:-sipintar_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-sipintar_password123}
+    ports:
+      - '3307:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./setup-database.sql:/docker-entrypoint-initdb.d/setup-database.sql
+    networks:
+      - sipintar-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  seed:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: sipintar-seed
+    restart: "no"
+    working_dir: /app
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: mysql://sipintar_user:sipintar_password123@db:3306/sipintar_school
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["npm", "run", "db:seed"]
+    networks:
+      - sipintar-network
+
+volumes:
+  mysql_data:
+networks:
+  sipintar-network:
+    driver: bridge

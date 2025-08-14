@@ -24,7 +24,7 @@ async function main() {
             email: 'parent@sipintar.com',
             name: 'Budi Hartono',
             password: parentPassword,
-            role: 'PARENT',
+            role: 'STUDENT',
         },
     })
 

@@ -133,6 +133,32 @@ prisma/
 └── seed.ts            # Database seeding script
 ```
 
+## API Endpoint For Integration of Face Recognition System
+
+GET /api/attendance
+```
+{
+  "studentNumber": "SW001", or "email": "siswa@sipintar.com",
+  "status": "PRESENT"
+  "classId": "CLAZZ_ID",
+  "date": "2025-08-20T07:00:00.000Z"
+}
+```
+POST /api/attendance/mark (menggunakan studentID)
+```
+{
+  "studentId": "STUDENT_ID",
+  "classId": "CLAZZ_ID",
+  "status": "EXCUSED",
+  "date": "2025-08-20T07:00:00.000Z"
+}
+```
+
+POST /api/attendance/manual
+```
+GET /api/attendance?classId=CLAZZ_ID
+```
+
 ## 🎯 Roadmap
 
 - [ ] NextAuth.js integration
@@ -178,3 +204,5 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+

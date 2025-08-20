@@ -146,35 +146,95 @@ prisma/
 ## 🤝 Contributing
 
 1. Fork repository
-2. Buat feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
+# SIPINTAR - Sistem Pemantauan Interaktif dan Pintar
 
-## 📄 License
+SIPINTAR adalah aplikasi manajemen sekolah modern yang dibangun dengan Next.js, TypeScript, Prisma, dan MySQL.
 
-This project is licensed under the MIT License.
+Catatan: README ini sudah diperbarui mengikuti perubahan UI terakhir: penambahan chart interaktif (Recharts), daftar aktivitas absen yang baru, dan sidebar responsif.
 
-## 🆘 Support
+## ✨ Sorotan Perubahan UI
 
-Untuk bantuan dan dukungan:
-- Create issue di GitHub
-- Email: support@sipintar.com
+- Dashboard kini menampilkan grafik kehadiran per kelas menggunakan Recharts (`src/components/AttendanceChart.tsx`).
+   - Grafik menampilkan 5 kelas default (X-1..X-5).
+   - Sumbu Y dibatasi hingga 35 siswa per kelas (domain [0, 35]).
+   - Menampilkan dua batang per kelas: Hadir (dark blue) dan Tidak Hadir (abu-abu).
+- Daftar aktivitas absen terbaru menggunakan `src/components/AbsentActivityList.tsx` dengan dummy 10 entri.
+   - Contoh entri: "Ahmad sudah absen pada jam 07:30".
+   - Komponen hadir dalam versi compact (kanan dashboard) dan full list (opsional).
+- Sidebar navigasi tersedia di `src/components/Sidebar.tsx` dan dipakai pada layout dashboard.
+
+## 🛠 Tech Stack (ringkasan)
+
+- Frontend: Next.js 15, React 19, TypeScript
+- Styling: Tailwind CSS
+- Charts: Recharts
+- Database: MySQL + Prisma
+- Auth: next-auth / custom (see `src/lib/auth.ts`)
+
+## 🚀 Jalankan secara lokal
+
+Persyaratan: Node.js 18+, MySQL.
+
+1. Install deps
+
+```powershell
+npm install
+```
+
+2. Setup environment
+
+- Salin `.env.example` ke `.env` dan sesuaikan `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`.
+
+3. Database
+
+```powershell
+npx prisma db push
+npx prisma generate
+npm run db:seed
+```
+
+4. Jalankan dev server
+
+```powershell
+npm run dev
+```
+
+5. Buka aplikasi di http://localhost:3000
+
+## ⛳ Struktur penting (ringkas)
+
+- `src/app/dashboard/admin/page.tsx` — halaman dashboard admin (menggunakan `AttendanceChart`, `AbsentActivityList`, `Sidebar`).
+- `src/components/AttendanceChart.tsx` — grafik kehadiran (Recharts).
+- `src/components/AbsentActivityList.tsx` — daftar aktivitas absen (dummy data).
+- `src/components/Sidebar.tsx` — navigasi kiri (desktop) + drawer (mobile).
+
+## 🔧 Perintah tersedia
+
+```powershell
+npm run dev      # development
+npm run build    # build production
+npm run start    # run production
+npm run lint     # lint project
+npm run db:seed  # seed demo data
+```
+
+## 💡 Catatan pengembangan & penyesuaian
+
+- Grafik saat ini menggunakan sample data (X-1..X-5). Untuk menampilkan data nyata, panggil API dan kirim hasil ke `<AttendanceChart data={...} />`.
+- Y-axis digolongkan 0..35. Jika Anda ingin menampilkan proporsi untuk dataset yang melebihi 35, ada dua opsi:
+   - normalisasi sebelum dikirim ke grafik, atau
+   - ubah domain sumbu Y sesuai data aktual.
+- `AbsentActivityList` menerima data dummy internal; mudah untuk diubah agar menerima prop `data` dari API.
+
+## ✅ Checklist kualitas yang sudah dijalankan
+
+- Build: `npm run build` — berhasil.
+- Lint & type check: berhasil.
+
+## 🆘 Bantuan
+
+Jika butuh integrasi API untuk charts atau aktivitas absen, beri tahu endpoint yang diinginkan dan saya akan membantu menghubungkannya.
 
 ---
-Dibuat dengan ❤️ menggunakan Next.js
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Terima kasih — mari lanjutkan mempercantik dan menyambungkan data nyata jika diperlukan.

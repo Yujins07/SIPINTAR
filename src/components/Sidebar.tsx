@@ -18,6 +18,7 @@ import { usePathname } from "next/navigation";
 type SidebarProps = {
   sidebarOpen?: boolean;
   onCloseMobile?: () => void;
+  onToggle?: () => void;
 };
 
 type NavItem = {
@@ -30,9 +31,13 @@ type NavItem = {
 export default function Sidebar({
   sidebarOpen = false,
   onCloseMobile,
+  onToggle,
 }: SidebarProps) {
   const [hovered, setHovered] = useState(false);
   const pathname = usePathname();
+
+  // desktop expanded when hovered OR when parent sets sidebarOpen
+  const expanded = sidebarOpen || hovered;
 
   const navItems: NavItem[] = [
     {
@@ -94,11 +99,16 @@ export default function Sidebar({
         className="hidden lg:block fixed inset-y-0 left-0 z-40"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
+        onClick={() => {
+          // when collapsed, clicking should request parent to toggle open
+          if (!expanded && onToggle) onToggle();
+        }}
+        role="button"
+        aria-label="Toggle sidebar"
       >
         <div
-          className={`h-full flex flex-col shadow-lg transition-all duration-300 ${
-            hovered ? "w-64" : "w-16"
-          }`}
+          className={`h-full flex flex-col shadow-lg transition-all duration-300 ${expanded ? "w-64" : "w-16"
+            }`}
           style={{ backgroundColor: "#0D1320" }}
         >
           {/* Header */}
@@ -111,9 +121,8 @@ export default function Sidebar({
               className="ml-4 flex-shrink-0"
             />
             <h1
-              className={`ml-3 text-xl font-bold text-white transition-all duration-300 whitespace-nowrap ${
-                hovered ? "opacity-100" : "opacity-0"
-              }`}
+              className={`ml-3 text-xl font-bold text-white transition-all duration-300 whitespace-nowrap ${expanded ? "opacity-100" : "opacity-0"
+                }`}
             >
               SIPINTAR
             </h1>
@@ -125,19 +134,17 @@ export default function Sidebar({
                 key={item.href}
                 href={item.href}
                 title={item.title}
-                className={`group flex items-center h-10 text-sm font-medium rounded-md transition-colors relative overflow-hidden ${
-                  isActive(item.href)
+                className={`group flex items-center h-10 text-sm font-medium rounded-md transition-colors relative overflow-hidden ${isActive(item.href)
                     ? "bg-blue-800 bg-opacity-50 text-white"
                     : "text-gray-300 hover:bg-gray-700 hover:bg-opacity-50 hover:text-white"
-                }`}
+                  }`}
               >
                 <span className="inline-flex h-6 w-6 items-center justify-center ml-3 flex-shrink-0">
                   {item.icon}
                 </span>
                 <span
-                  className={`ml-3 transition-all duration-300 whitespace-nowrap ${
-                    hovered ? "opacity-100" : "opacity-0"
-                  }`}
+                  className={`ml-3 transition-all duration-300 whitespace-nowrap ${expanded ? "opacity-100" : "opacity-0"
+                    }`}
                 >
                   {item.label}
                 </span>
@@ -149,9 +156,8 @@ export default function Sidebar({
 
       {/* Mobile sidebar */}
       <div
-        className={`lg:hidden fixed inset-0 flex z-40 ${
-          sidebarOpen ? "block" : "hidden"
-        }`}
+        className={`lg:hidden fixed inset-0 flex z-40 ${sidebarOpen ? "block" : "hidden"
+          }`}
       >
         <div
           className="fixed inset-0 bg-gray-600 bg-opacity-75"
@@ -202,11 +208,10 @@ export default function Sidebar({
                   key={item.href}
                   href={item.href}
                   title={item.title}
-                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors ${
-                    isActive(item.href)
+                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors ${isActive(item.href)
                       ? "bg-blue-800 bg-opacity-50 text-white"
                       : "text-gray-300 hover:bg-gray-700 hover:bg-opacity-50 hover:text-white"
-                  }`}
+                    }`}
                   onClick={onCloseMobile}
                 >
                   {item.icon}

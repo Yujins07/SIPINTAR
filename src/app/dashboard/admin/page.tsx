@@ -169,7 +169,7 @@ export default function AdminDashboard() {
                             </Link>
 
                             <Link
-                                href="/dashboard/attendance"
+                                href="/dashboard/admin/attendance"
                                 className="text-gray-300 hover:bg-gray-700 hover:bg-opacity-50 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
                                 title="Absensi"
                             >
@@ -262,7 +262,7 @@ export default function AdminDashboard() {
 
                     <div className="flex-1 px-4 flex justify-between items-center">
                         <div className="flex-1">
-                            <h1 className="text-2xl font-semibold text-gray-900">Dashboard Admin</h1>
+                            <h1 className="text-2xl font-semibold text-gray-900">Dashboard Guru</h1>
                         </div>
                         <div className="ml-4 flex items-center md:ml-6">
                             <div className="flex items-center space-x-4">
@@ -288,7 +288,9 @@ export default function AdminDashboard() {
                             {/* Welcome Section */}
                             <div className="mb-8">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                                    Selamat Datang, {user.name}!
+                                    Selamat Datang, Rini Wulandari
+                                    {/* {user.name} */}
+                                    !
                                 </h2>
                                 <p className="text-gray-600">Kelola sistem sekolah dengan mudah dan efisien</p>
                             </div>

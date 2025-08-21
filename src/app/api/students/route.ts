@@ -197,3 +197,84 @@ export async function POST(request: NextRequest) {
         )
     }
 }
+
+export async function DELETE(request: NextRequest) {
+    try {
+        const authHeader = request.headers.get('authorization')
+        const token = authHeader?.replace('Bearer ', '')
+
+        if (!token) {
+            return NextResponse.json({ message: 'No token provided' }, { status: 401 })
+        }
+
+        const decoded = jwt.verify(token, process.env.NEXTAUTH_SECRET || 'fallback-secret') as { role: string }
+        if (decoded.role !== 'ADMIN') {
+            return NextResponse.json({ message: 'Insufficient permissions' }, { status: 403 })
+        }
+
+        const { id } = await request.json()
+        if (!id) {
+            return NextResponse.json({ message: 'Missing student id' }, { status: 400 })
+        }
+
+        // delete student and user transactionally
+        await prisma.$transaction(async (tx) => {
+            // find student to get userId
+            const student = await tx.student.findUnique({ where: { id } })
+            if (!student) throw new Error('Student not found')
+
+            await tx.student.delete({ where: { id } })
+            await tx.user.delete({ where: { id: student.userId } })
+        })
+
+        return NextResponse.json({ message: 'Student deleted' })
+    } catch (error) {
+        console.error('Delete student error:', error)
+        return NextResponse.json({ message: 'Internal server error' }, { status: 500 })
+    }
+}
+
+export async function PUT(request: NextRequest) {
+    try {
+        const authHeader = request.headers.get('authorization')
+        const token = authHeader?.replace('Bearer ', '')
+
+        if (!token) {
+            return NextResponse.json({ message: 'No token provided' }, { status: 401 })
+        }
+
+        const decoded = jwt.verify(token, process.env.NEXTAUTH_SECRET || 'fallback-secret') as { role: string }
+        if (decoded.role !== 'ADMIN') {
+            return NextResponse.json({ message: 'Insufficient permissions' }, { status: 403 })
+        }
+
+        const body = await request.json()
+        const { id, name, email, phone, address, parentName, parentPhone } = body
+        if (!id) return NextResponse.json({ message: 'Missing student id' }, { status: 400 })
+
+        // update user and student
+        const result = await prisma.$transaction(async (tx) => {
+            const student = await tx.student.update({
+                where: { id },
+                data: {
+                    phone,
+                    address,
+                    parentName,
+                    parentPhone,
+                },
+            })
+
+            const user = await tx.user.update({
+                where: { id: student.userId },
+                data: { name, email },
+            })
+
+            return { student, user }
+        })
+
+        return NextResponse.json({ message: 'Student updated', ...result })
+    } catch (error) {
+        console.error('Update student error:', error)
+        return NextResponse.json({ message: 'Internal server error' }, { status: 500 })
+    }
+}

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Sidebar from '@/components/Sidebar'
 import { useRouter } from 'next/navigation'
 
 interface Class {
@@ -56,6 +57,7 @@ export default function ClassesPage() {
         subjectId: '',
     })
     const router = useRouter()
+    const [sidebarOpen, setSidebarOpen] = useState(false)
 
     useEffect(() => {
         const token = localStorage.getItem('token')
@@ -169,12 +171,26 @@ export default function ClassesPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-800">
+            <Sidebar
+                sidebarOpen={sidebarOpen}
+                onCloseMobile={() => setSidebarOpen(false)}
+                onToggle={() => setSidebarOpen((s) => !s)}
+            />
             {/* Navigation */}
             <nav className="bg-white shadow-sm border-b">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         <div className="flex items-center">
+                            <button
+                                onClick={() => setSidebarOpen(true)}
+                                className="lg:hidden p-2 rounded-md mr-2 bg-gray-100"
+                                aria-label="Open sidebar"
+                            >
+                                <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            </button>
                             <h1 className="text-xl font-bold text-gray-900">SIPINTAR</h1>
                             <span className="ml-2 text-sm text-gray-500">Manajemen Kelas</span>
                         </div>
@@ -260,10 +276,10 @@ export default function ClassesPage() {
                                     </div>
                                     <div className="ml-4">
                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${classItem._count.students >= classItem.maxStudents
-                                                ? 'bg-red-100 text-red-800'
-                                                : classItem._count.students >= classItem.maxStudents * 0.8
-                                                    ? 'bg-yellow-100 text-yellow-800'
-                                                    : 'bg-green-100 text-green-800'
+                                            ? 'bg-red-100 text-red-800'
+                                            : classItem._count.students >= classItem.maxStudents * 0.8
+                                                ? 'bg-yellow-100 text-yellow-800'
+                                                : 'bg-green-100 text-green-800'
                                             }`}>
                                             {classItem._count.students >= classItem.maxStudents
                                                 ? 'Penuh'

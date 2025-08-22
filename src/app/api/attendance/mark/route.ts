@@ -19,12 +19,13 @@ export async function POST(request: NextRequest) {
         }
 
         // Resolve student and user
+        const orConditions: object[] = []
+        if (studentNumber) orConditions.push({ studentNumber })
+        if (email) orConditions.push({ user: { email } })
+
         const student = await prisma.student.findFirst({
             where: {
-                OR: [
-                    studentNumber ? { studentNumber } : undefined,
-                    email ? { user: { email } } : undefined,
-                ].filter(Boolean) as any,
+                OR: orConditions.length ? orConditions : undefined,
             },
             include: { user: true },
         })

@@ -3,7 +3,9 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
     try {
-        let { studentId, classId, status, date } = await request.json()
+    const body = await request.json()
+    const { studentId, status, date } = body
+    let classId = body.classId
 
         if (!studentId || !status) {
             return NextResponse.json({ message: 'studentId and status are required' }, { status: 400 })

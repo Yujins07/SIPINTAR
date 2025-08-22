@@ -1,9 +1,8 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
-type Role = 'ADMIN' | 'TEACHER' | 'STUDENT' | 'PARENT'
 
 type UserLite = { id: string; name: string; email: string; isActive: boolean }
 
@@ -51,12 +50,16 @@ export default function AdminAttendancePage() {
 				if (!resClasses.ok) throw new Error('Gagal memuat data kelas')
 				const dataStudents = await resStudents.json()
 				const dataClasses = await resClasses.json()
-				const flat: Student[] = dataStudents.map((s: any) => ({ id: s.id, studentNumber: s.studentNumber, user: s.user }))
+				const flat: Student[] = dataStudents.map((s: Student) => ({ id: s.id, studentNumber: s.studentNumber, user: s.user }))
 				setStudents(flat)
-				setClasses(dataClasses.map((c: any) => ({ id: c.id, name: c.name })))
+				setClasses(dataClasses.map((c: Klass) => ({ id: c.id, name: c.name })))
 				setSelectedClassId(dataClasses[0]?.id || '')
-			} catch (e: any) {
-				setError(e.message || 'Terjadi kesalahan')
+			} catch (e: unknown) {
+				if (e instanceof Error) {
+					setError(e.message || 'Terjadi kesalahan')
+				} else {
+					setError('Terjadi kesalahan')
+				}
 			} finally {
 				setLoading(false)
 			}
@@ -66,7 +69,7 @@ export default function AdminAttendancePage() {
 
 	// Poll attendance every 3s
 	useEffect(() => {
-		let timer: any
+		let timer: ReturnType<typeof setTimeout>
 		const poll = async () => {
 			try {
 				const url = selectedClassId ? `/api/attendance?classId=${selectedClassId}` : '/api/attendance'
@@ -112,8 +115,12 @@ export default function AdminAttendancePage() {
 			const data = await res.json()
 			setAttendanceMap((prev) => ({ ...prev, [studentId]: data.record }))
 			if (status === 'PRESENT') triggerSparkle(studentId)
-		} catch (e: any) {
-			setError(e.message || 'Terjadi kesalahan')
+		} catch (e: unknown) {
+			if (e instanceof Error) {
+				setError(e.message || 'Terjadi kesalahan')
+			} else {
+				setError('Terjadi kesalahan')
+			}
 		}
 	}
 
